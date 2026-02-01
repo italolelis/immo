@@ -1,0 +1,42 @@
+{
+  "name": "immo-cc",
+  "version": "0.1.0",
+  "description": "A meta-prompting and context engineering system for real estate investment analysis with Claude Code.",
+  "bin": {
+    "immo-cc": "bin/install.js"
+  },
+  "files": [
+    "bin",
+    "commands",
+    "immo",
+    "agents",
+    "scripts"
+  ],
+  "keywords": [
+    "claude",
+    "claude-code",
+    "ai",
+    "real-estate",
+    "investment",
+    "property",
+    "analysis",
+    "germany",
+    "neubau",
+    "immobilien"
+  ],
+  "author": "",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/your-username/immo.git"
+  },
+  "homepage": "https://github.com/your-username/immo",
+  "bugs": {
+    "url": "https://github.com/your-username/immo/issues"
+  },
+  "engines": {
+    "node": ">=16.7.0"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}
