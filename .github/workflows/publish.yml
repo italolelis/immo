@@ -21,13 +21,19 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '22'
-        env:
-          NODE_AUTH_TOKEN: ''  # Clear default token to enable OIDC
+
+      - name: Install npm 11.5+ for OIDC support
+        run: npm install -g npm@latest
 
       - name: Check versions
         run: |
           node --version
           npm --version
+
+      - name: Clear any existing npm auth
+        run: |
+          npm config delete //registry.npmjs.org/:_authToken || true
+          cat ~/.npmrc 2>/dev/null || echo "No .npmrc file"
 
       - name: Verify package version matches tag
         run: |
@@ -39,7 +45,7 @@ jobs:
           fi
           echo "Version verified: $PACKAGE_VERSION"
 
-      - name: Publish to npm
+      - name: Publish to npm with OIDC
         run: npm publish --access public
 
   create-release:
