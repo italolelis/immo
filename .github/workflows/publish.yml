@@ -20,7 +20,9 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '22'  # npm 11+ required for trusted publishing OIDC
+          node-version: '22'
+        env:
+          NODE_AUTH_TOKEN: ''  # Clear default token to enable OIDC
 
       - name: Check versions
         run: |
