@@ -69,6 +69,7 @@ workflows, consistent methodology, and professional reporting.
 |---------|-------------|
 | `/immo:init` | Initialize project with investor profile |
 | `/immo:status` | Show current state and next action |
+| `/immo:update` | Update IMMO to the latest version |
 | `/immo:help` | This reference |
 
 ### Research
@@ -332,6 +333,11 @@ IMMO follows 10 mandatory rules:
 
 ## Updating IMMO
 
+```bash
+/immo:update
+```
+
+Or manually:
 ```bash
 npx immo-cc@latest
 ```
