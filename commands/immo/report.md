@@ -20,11 +20,117 @@ Generate a comprehensive financial advisor briefing document:
 **Creates:** `.immo/output/BRIEFING-[DATE].md`
 
 **Usage:**
-- `/immo:report` — Generate in English
+- `/immo:report` — Full advisor briefing
+- `/immo:report --short` — 1-page executive summary
 - `/immo:report --lang pt` — Generate in Portuguese
-- `/immo:report --lang de` — Generate in German
+- `/immo:report --short --lang de` — Short report in German
 
 </objective>
+
+<short_report>
+
+## Short Report Format (--short flag)
+
+When `--short` is specified, generate a **1-page executive summary** instead of the full briefing.
+
+**Creates:** `.immo/output/SUMMARY-[DATE].md`
+
+### Template
+
+```markdown
+# Investment Summary: [LOCATION]
+
+**Date:** [DATE] | **Investor:** [TAX_CLASS] | **Tax Rate:** [RATE]%
+
+---
+
+## Top 5 Options
+
+| Unit | Price | Yield | Upfront | Y1-4/mo | Y5-10/mo | 10yr Profit | ROE |
+|------|-------|-------|---------|---------|----------|-------------|-----|
+| [1]  | €XXX  | X.X%  | €XX     | +€XX    | -€XX     | €XXk        | XX% |
+| [2]  | €XXX  | X.X%  | €XX     | +€XX    | -€XX     | €XXk        | XX% |
+| [3]  | €XXX  | X.X%  | €XX     | +€XX    | -€XX     | €XXk        | XX% |
+| [4]  | €XXX  | X.X%  | €XX     | +€XX    | -€XX     | €XXk        | XX% |
+| [5]  | €XXX  | X.X%  | €XX     | +€XX    | -€XX     | €XXk        | XX% |
+
+**Winners:** Yield: [UNIT] | Lowest Price: [UNIT] | Best ROE: [UNIT] | Parking: [UNIT]
+
+---
+
+## Recommendation
+
+**Top Pick:** [UNIT_ID] — €[PRICE] — [YIELD]% yield
+
+### Why This Unit?
+
+1. **[REASON 1]** — [Brief explanation]
+2. **[REASON 2]** — [Brief explanation]
+3. **[REASON 3]** — [Brief explanation]
+
+### Trade-offs to Accept
+
+- [Trade-off 1]
+- [Trade-off 2]
+
+### Alternative: [UNIT_ID]
+
+Choose this if: [One sentence explaining when alternative is better]
+
+---
+
+## Key Risks
+
+| Risk | Impact | Mitigation |
+|------|--------|------------|
+| Negative cashflow Y5-10 | -€[X]/mo | Covered by buffer (€[X] available) |
+| 0% appreciation | -€[X]k profit | Still break-even / modest loss |
+| Rate hike at refinancing | +€[X]/mo | Can sell tax-free at Y10 |
+
+---
+
+## Questions for Your Advisor
+
+1. **Interest Rate:** Developer offers [X]%. Can we get [Y]%? (Saves €[Z] over 10 years)
+
+2. **Tax Optimization:** With [INCOME] income and [TAX_CLASS], is 100% financing optimal?
+
+3. **Timing:** Construction completes [DATE]. Any tax implications for [YEAR]?
+
+4. **Exit Strategy:** Sell at year 10 tax-free vs. hold longer — what's your view?
+
+5. **Portfolio Fit:** How does this fit with existing investments/pension strategy?
+
+---
+
+## Next Steps
+
+1. [ ] Discuss with advisor using this summary
+2. [ ] Get financing quotes (target: [X]%)
+3. [ ] Visit development if possible
+4. [ ] Reserve unit within [X] days if proceeding
+
+---
+
+*Full analysis: Run `/immo:report` for detailed briefing*
+```
+
+### Short Report Generation Logic
+
+1. **Top 5 Selection:** Take top 5 from shortlist ranked by yield
+2. **Recommendation:** Highest yield unit with parking preference satisfied (if required)
+3. **Why Reasons:** Pull from:
+   - Yield ranking ("Highest yield in shortlist")
+   - Price efficiency ("Best €/m² ratio")
+   - Cashflow ("Lowest Y5-10 deficit")
+   - Size ("Optimal 50-75m² for rentability")
+   - Risk ("Best stress test resilience")
+4. **Trade-offs:** What the chosen unit lacks vs alternatives
+5. **Alternative:** Second-best option with different characteristics (e.g., with parking if top pick lacks it)
+6. **Risks:** Top 3 from stress test results
+7. **Questions:** Derive from analysis gaps and optimization opportunities
+
+</short_report>
 
 <execution_context>
 

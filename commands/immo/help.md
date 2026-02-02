@@ -92,9 +92,10 @@ workflows, consistent methodology, and professional reporting.
 
 | Command | Description |
 |---------|-------------|
-| `/immo:report` | Generate advisor briefing (English) |
-| `/immo:report --lang pt` | Generate briefing in Portuguese |
-| `/immo:report --lang de` | Generate briefing in German |
+| `/immo:report` | Full advisor briefing |
+| `/immo:report --short` | 1-page executive summary |
+| `/immo:report --lang pt` | Generate in Portuguese |
+| `/immo:report --short --lang de` | Short summary in German |
 
 ## Command Details
 
@@ -212,28 +213,30 @@ Research current mortgage interest rates in Germany.
 
 ---
 
-### `/immo:report [--lang XX]`
+### `/immo:report [--short] [--lang XX]`
 
-Generate comprehensive financial advisor briefing.
+Generate advisor briefing document.
 
-**Sections:**
-- Executive summary
-- Priority questions for advisor
-- Investor profile
-- Location analysis
-- Units comparison
-- Interest rate analysis
-- Cashflow projections (Y1-4, Y5-10)
-- Tax benefit breakdown
-- 10-year exit analysis
-- Risk analysis & stress tests
-- Decision framework
+**Full Report (default):**
+- Executive summary, investor profile, location analysis
+- Units comparison, cashflow projections, tax benefits
+- 10-year exit analysis, stress tests, decision framework
+- Creates: `.immo/output/BRIEFING-[date].md`
+
+**Short Report (`--short`):**
+- 1-page executive summary
+- Top 5 units comparison table
+- Recommendation with reasoning
+- Key risks and mitigations
+- 5 questions for your advisor
+- Creates: `.immo/output/SUMMARY-[date].md`
 
 **Languages:** `en` (default), `pt` (Portuguese), `de` (German)
 
-**Creates:** `.immo/output/BRIEFING-[date].md`
-
-**Example:** `/immo:report --lang pt`
+**Examples:**
+- `/immo:report` — Full briefing
+- `/immo:report --short` — 1-page summary
+- `/immo:report --short --lang pt` — Short summary in Portuguese
 
 ---
 
