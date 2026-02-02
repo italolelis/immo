@@ -24,7 +24,7 @@
     "neubau",
     "immobilien"
   ],
-  "author": "",
+  "author": "Italo Vietro",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -36,7 +36,5 @@
   },
   "engines": {
     "node": ">=16.7.0"
-  },
-  "dependencies": {},
-  "devDependencies": {}
+  }
 }

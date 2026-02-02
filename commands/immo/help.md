@@ -13,262 +13,335 @@ Output ONLY the reference content below. Do NOT add:
 </objective>
 
 <reference>
-# IMMO Command Reference
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ IMMO — Real Estate Investment Analysis System
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
 
-**IMMO** analyzes real estate investments systematically. It provides structured workflows, consistent methodology, and professional reporting.
+IMMO analyzes real estate investments systematically. It provides structured
+workflows, consistent methodology, and professional reporting.
+
+## Workflow
+
+```
+┌─────────┐    ┌─────────┐    ┌─────────┐    ┌─────────┐    ┌─────────┐    ┌─────────┐
+│  INIT   │───▶│  SCOUT  │───▶│ ANALYZE │───▶│ FILTER  │───▶│ COMPARE │───▶│ REPORT  │
+└─────────┘    └─────────┘    └─────────┘    └─────────┘    └─────────┘    └─────────┘
+     │              │              │              │              │              │
+  Profile       Research       Calculate       Apply        Side-by-side    Advisor
+  + Setup       Location       Metrics       Criteria      Comparison      Briefing
+```
 
 ## Quick Start
 
-1. `/immo:init` - Initialize project with investor profile
-2. Add property documents to `properties/[location]/`
-3. `/immo:scout [location]` - Research locations
-4. `/immo:analyze [location]` - Calculate metrics
-5. `/immo:compare` - Compare shortlist
-6. `/immo:report` - Generate advisor briefing
-
-## Staying Updated
-
 ```bash
-npx immo-cc@latest
+# 1. Initialize project with investor profile
+/immo:init
+
+# 2. Add property documents to properties/[location]/
+#    (price lists, exposés, calculation docs)
+
+# 3. Research the location
+/immo:scout kassel
+
+# 4. Analyze units and calculate metrics
+/immo:analyze kassel
+
+# 5. Apply criteria and create shortlist
+/immo:filter kassel
+
+# 6. Compare shortlisted properties
+/immo:compare
+
+# 7. Run stress tests (optional)
+/immo:stress-test
+
+# 8. Generate advisor briefing
+/immo:report --lang pt
 ```
 
-## Core Workflow
+## Commands
 
-```
-/immo:init → /immo:scout → /immo:analyze → /immo:compare → /immo:report
-```
+### Setup & Status
 
-### Project Initialization
+| Command | Description |
+|---------|-------------|
+| `/immo:init` | Initialize project with investor profile |
+| `/immo:status` | Show current state and next action |
+| `/immo:help` | This reference |
 
-**`/immo:init`**
-Initialize new investment project through interactive flow.
+### Research
 
-One command sets up your analysis environment:
-- Investor profile (income, tax class, assets)
-- Investment criteria (yield, price, size)
-- Country-specific settings (Germany, Portugal, etc.)
+| Command | Description |
+|---------|-------------|
+| `/immo:scout [location]` | Research location viability (Erbpacht, transport, market) |
+| `/immo:rates` | Research current mortgage interest rates |
 
-Creates all `.immo/` artifacts:
-- `config.json` — investor profile and preferences
-- `STATE.md` — analysis state tracking
-- `research/` — location research
-- `analysis/` — property analysis
-- `output/` — generated reports
+### Analysis
 
-Usage: `/immo:init`
+| Command | Description |
+|---------|-------------|
+| `/immo:analyze [location]` | Extract units, calculate metrics, rank by yield |
+| `/immo:filter [location]` | Apply criteria and create shortlist |
+| `/immo:compare` | Side-by-side comparison of all shortlisted units |
+| `/immo:stress-test` | Run stress scenarios (0% appreciation, rate hike, vacancy) |
 
-**`/immo:status`**
-Show current analysis state and recommended next action.
+### Output
 
-Displays:
-- Current workflow phase
-- Locations and their status
-- Shortlisted properties
-- Pending actions
+| Command | Description |
+|---------|-------------|
+| `/immo:report` | Generate advisor briefing (English) |
+| `/immo:report --lang pt` | Generate briefing in Portuguese |
+| `/immo:report --lang de` | Generate briefing in German |
 
-Usage: `/immo:status`
+## Command Details
 
-### Research Phase
+### `/immo:init`
 
-**`/immo:scout [location]`**
+Initialize a new investment project through interactive flow.
+
+**Gathers:**
+- Country and tax class
+- Income and marginal tax rate
+- Liquid assets and commitments
+- Investment horizon and financing preference
+- Criteria (min yield, max price, size range, parking)
+
+**Creates:**
+- `.immo/config.json` — Investor profile
+- `.immo/STATE.md` — Analysis state tracking
+- `properties/` — Folder for property documents
+- `IMMO.md` — Project summary
+
+---
+
+### `/immo:scout [location]`
+
 Research a location for investment viability.
 
-Investigates:
-- Development details (name, developer, size)
-- Erbpacht status (CRITICAL - auto-excludes if undisclosed)
+**Investigates:**
+- Development details (name, developer, units, completion)
+- **Erbpacht status** — CRITICAL, auto-excludes if undisclosed
 - Public transport quality
 - Parking necessity assessment
-- Market conditions
+- Market conditions (rental demand, price trends)
 
-Creates: `.immo/research/locations/[location].md`
+**Creates:** `.immo/research/locations/[location].md`
 
-Usage: `/immo:scout kassel`
+**Example:** `/immo:scout kassel`
 
-**`/immo:rates`**
-Research current mortgage interest rates.
+---
 
-Sources: Dr. Klein, Baufi24, Interhyp, Finanztip
+### `/immo:analyze [location]`
 
-Outputs:
-- Current top rates by fixed period
-- Rate forecast
-- Comparison with developer rates
+Analyze all properties in a location folder.
 
-Creates: `.immo/research/market/RATES-[date].md`
-
-Usage: `/immo:rates`
-
-**`/immo:add-location [name]`**
-Add a new location folder for analysis.
-
-Creates: `properties/[name]/`
-
-Usage: `/immo:add-location munich`
-
-### Analysis Phase
-
-**`/immo:analyze [location]`**
-Analyze all properties in a location.
-
-Process:
+**Process:**
 1. Extract units from price lists (Excel/PDF)
-2. Calculate metrics (yield, price/m², cashflow)
-3. Apply investor's tax rate
-4. Rank by real metrics (not brochure IRR)
+2. Calculate metrics (yield, price/m², upfront costs)
+3. Model cashflow for Years 1-4 (with Sonder-AfA) and Years 5-10
+4. Project 10-year exit value and ROE
 
-Creates:
-- `.immo/analysis/[location]/UNITS.md`
-- `.immo/analysis/[location]/RANKED.md`
+**Creates:**
+- `.immo/analysis/[location]/UNITS.md` — All extracted units
+- `.immo/analysis/[location]/RANKED.md` — Sorted by metrics
 
-Usage: `/immo:analyze kassel`
+**Example:** `/immo:analyze kassel`
 
-**`/immo:analyze-all`**
-Analyze all locations in properties folder.
+---
 
-Usage: `/immo:analyze-all`
+### `/immo:filter [location]`
 
-**`/immo:extract [file]`**
-Extract units from a specific price list file.
+Apply investor's criteria to create shortlist.
 
-Supports: Excel (.xlsx), PDF price lists
+**Filters:**
+- Minimum yield
+- Maximum price
+- Size range
+- Parking requirement
+- Floor exclusions
 
-Usage: `/immo:extract "properties/kassel/Kaufpreisliste.xlsx"`
+**Creates:**
+- `.immo/analysis/[location]/SHORTLIST.md` — Qualifying units
+- `.immo/analysis/[location]/EXCLUSIONS.md` — Excluded with reasons
 
-### Filter & Compare Phase
+**Example:** `/immo:filter kassel`
 
-**`/immo:filter [location]`**
-Apply exclusion rules and create shortlist.
+---
 
-Applies:
-- Criteria from config (min yield, max price, size range)
-- Quality exclusions (if marked)
-- Erbpacht exclusions
+### `/immo:compare`
 
-Creates: `.immo/analysis/[location]/SHORTLIST.md`
+Side-by-side comparison of all shortlisted properties.
 
-Usage: `/immo:filter kassel`
+**Displays:**
+- Unified comparison table (price, yield, cashflow, profit)
+- Winners by metric
+- Liquidity impact
+- Decision framework ("Choose X if...")
 
-**`/immo:exclude [unit] [reason]`**
-Manually exclude a unit with documented reason.
+---
 
-Reasons: quality, erbpacht, price, yield, location, other
+### `/immo:stress-test`
 
-Usage: `/immo:exclude "kassel/3.7" "ground floor not preferred"`
-
-**`/immo:compare`**
-Side-by-side comparison of shortlisted units.
-
-Displays:
-- All metrics in comparison table
-- Cashflow by phase (Y1-4, Y5-10)
-- 10-year profit and ROE
-- Decision framework
-
-Usage: `/immo:compare`
-
-**`/immo:stress-test`**
 Run stress scenarios on shortlisted properties.
 
-Scenarios:
-- 0% appreciation (no property value growth)
-- Higher refinancing rate (5% at year 10)
-- Extended vacancy (2 months/year)
+**Scenarios:**
+1. **Zero appreciation** — Property values stay flat
+2. **Rate hike** — +2% interest at refinancing
+3. **Extended vacancy** — 3 months every 2 years
+4. **Combined worst case** — All factors together
 
-Usage: `/immo:stress-test`
+**Creates:** `.immo/analysis/STRESS-TEST.md`
 
-### Report Phase
+---
 
-**`/immo:report [--lang XX]`**
-Generate professional advisor briefing.
+### `/immo:rates`
 
-Uses template with:
+Research current mortgage interest rates in Germany.
+
+**Sources:** Dr. Klein, Baufi24, Interhyp, Finanztip
+
+**Outputs:**
+- Current top rates by fixed period
+- Comparison with developer rates
+- Potential savings calculation
+
+**Creates:** `.immo/research/market/RATES-[date].md`
+
+---
+
+### `/immo:report [--lang XX]`
+
+Generate comprehensive financial advisor briefing.
+
+**Sections:**
 - Executive summary
 - Priority questions for advisor
-- Full financial analysis
-- Comparison tables
-- Risk analysis
+- Investor profile
+- Location analysis
+- Units comparison
+- Interest rate analysis
+- Cashflow projections (Y1-4, Y5-10)
+- Tax benefit breakdown
+- 10-year exit analysis
+- Risk analysis & stress tests
 - Decision framework
 
-Languages: `en` (default), `pt` (Portuguese), `de` (German)
+**Languages:** `en` (default), `pt` (Portuguese), `de` (German)
 
-Creates: `.immo/output/BRIEFING-[date].md`
+**Creates:** `.immo/output/BRIEFING-[date].md`
 
-Usage: `/immo:report --lang pt`
+**Example:** `/immo:report --lang pt`
 
-**`/immo:summary`**
-Quick summary of current shortlist.
+---
 
-Displays compact table without full report.
+### `/immo:status`
 
-Usage: `/immo:summary`
+Show current analysis state and recommended next action.
 
-### Settings
+**Displays:**
+- Current workflow phase
+- Investor profile summary
+- Locations and their status
+- Shortlisted properties
+- Next recommended action
 
-**`/immo:set [key] [value]`**
-Update configuration value.
+## Key Concepts
 
-Examples:
-- `/immo:set minYield 3.0`
-- `/immo:set maxPrice 400000`
-- `/immo:set language pt`
+### Erbpacht (Ground Lease)
 
-Usage: `/immo:set [key] [value]`
+Ground lease where you own the building but lease the land. IMMO auto-detects
+Erbpacht indicators and **excludes properties with undisclosed ground rent**.
 
-**`/immo:profile`**
-View or edit investor profile.
+**Why critical:** Hidden Erbbauzins (ground rent) can cost €1,000-5,000/year.
 
-Usage: `/immo:profile`
+### Sonder-AfA §7b
 
-**`/immo:reset [location]`**
-Reset analysis for a location (keeps documents).
+German special depreciation for new construction:
+- **Years 1-4:** 5% special + 2% regular = 7% annual depreciation
+- **Years 5-10:** 2% regular depreciation only
 
-Usage: `/immo:reset kassel`
+IMMO models both phases separately — the "good period" and the "bleeding period".
+
+### Spekulationsfrist
+
+German 10-year holding period for tax-free capital gains. IMMO's default
+strategy: buy → rent → sell tax-free at year 10.
+
+### Nebenkosten
+
+German acquisition costs (~8% of purchase price):
+- Grunderwerbsteuer (transfer tax): 3.5-6.5% by state
+- Notary fees: ~1.5%
+- Land registry: ~0.5%
+
+## File Structure
+
+```
+project/
+├── IMMO.md                    # Project summary
+├── properties/
+│   └── [location]/            # Property documents (price lists, exposés)
+│
+└── .immo/
+    ├── config.json            # Investor profile and criteria
+    ├── STATE.md               # Workflow state tracking
+    │
+    ├── research/
+    │   ├── market/
+    │   │   └── RATES-*.md     # Interest rate research
+    │   └── locations/
+    │       └── [location].md  # Location research
+    │
+    ├── analysis/
+    │   ├── [location]/
+    │   │   ├── UNITS.md       # All extracted units
+    │   │   ├── RANKED.md      # Sorted by metrics
+    │   │   ├── SHORTLIST.md   # Qualifying units
+    │   │   └── EXCLUSIONS.md  # Excluded with reasons
+    │   └── STRESS-TEST.md     # Stress test results
+    │
+    └── output/
+        └── BRIEFING-*.md      # Generated reports
+```
 
 ## Supported Countries
 
 | Country | Status | Key Features |
 |---------|--------|--------------|
-| 🇩🇪 Germany | Full | Sonder-AfA, Spekulationsfrist, Nebenkosten |
-| 🇵🇹 Portugal | Planned | Golden Visa, NHR regime |
-| 🇪🇸 Spain | Planned | - |
-| 🇳🇱 Netherlands | Planned | - |
+| Germany | **Full** | Sonder-AfA, Spekulationsfrist, Nebenkosten, Erbpacht detection |
+| Portugal | Planned | Golden Visa, NHR regime |
+| Spain | Planned | — |
+| Netherlands | Planned | — |
 
-## Key Concepts
+## Core Methodology
 
-### Erbpacht (Ground Lease)
-IMMO auto-detects Erbpacht indicators and excludes properties with undisclosed ground rent costs. This is critical as Erbpacht significantly impacts returns.
+IMMO follows 10 mandatory rules:
 
-### Sonder-AfA §7b
-German special depreciation (5%/year for 4 years) for new construction. IMMO models this in Years 1-4, then regular AfA (2%) for Years 5-10.
+1. **Independent Calculation** — Never trust developer marketing numbers
+2. **Erbpacht First** — Always verify ground lease status
+3. **Correct Tax Rate** — Use investor's actual marginal rate
+4. **Two-Phase Cashflow** — Show Y1-4 and Y5-10 separately
+5. **All Costs Included** — Nebenkosten, construction interest, management
+6. **Conservative Assumptions** — 2% appreciation, 0% rent increase
+7. **Stress Testing** — 0% appreciation, rate hikes, vacancy
+8. **Parking Research** — Assess transport for each location
+9. **Interest Rate Verification** — Compare to market rates
+10. **Decision Framework** — Present trade-offs, let investor decide
 
-### Spekulationsfrist
-German 10-year holding period for tax-free capital gains. IMMO's default strategy is buy → rent → sell tax-free at year 10.
+## Updating IMMO
 
-### Nebenkosten
-German acquisition costs (~8%): transfer tax + notary + registration. IMMO calculates by state (rates vary 3.5%-6.5% for transfer tax).
-
-## Files Reference
-
-```
-.immo/
-├── config.json         # Investor profile
-├── STATE.md            # Workflow state
-├── research/
-│   ├── market/         # Rate research
-│   └── locations/      # Location research
-├── analysis/
-│   └── [location]/
-│       ├── UNITS.md    # All units
-│       ├── RANKED.md   # Sorted by metrics
-│       └── SHORTLIST.md
-└── output/
-    └── BRIEFING-*.md   # Generated reports
+```bash
+npx immo-cc@latest
 ```
 
 ## Getting Help
 
-- `/immo:help` - This reference
-- `/immo:status` - Current state and next action
-- GitHub Issues - Bug reports and feature requests
+| Resource | Description |
+|----------|-------------|
+| `/immo:help` | This reference |
+| `/immo:status` | Current state and next action |
+| [GitHub Issues](https://github.com/italolelis/immo/issues) | Bug reports and feature requests |
 
 </reference>

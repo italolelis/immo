@@ -26,7 +26,7 @@ This is the foundation of any analysis. Deep profile gathering here means accura
 
 <execution_context>
 
-@~/.claude/immo/references/tax-rates.md
+@~/.claude/immo/references/germany/tax-rules.md
 @~/.claude/immo/templates/config.json
 @~/.claude/immo/templates/state.md
 
