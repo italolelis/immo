@@ -92,10 +92,11 @@ workflows, consistent methodology, and professional reporting.
 
 | Command | Description |
 |---------|-------------|
-| `/immo:report` | Full advisor briefing |
+| `/immo:report` | Full advisor briefing (Markdown) |
 | `/immo:report --short` | 1-page executive summary |
+| `/immo:report --pdf` | Generate PDF report |
+| `/immo:report --short --pdf` | 1-page PDF summary |
 | `/immo:report --lang pt` | Generate in Portuguese |
-| `/immo:report --short --lang de` | Short summary in German |
 
 ## Command Details
 
@@ -213,7 +214,7 @@ Research current mortgage interest rates in Germany.
 
 ---
 
-### `/immo:report [--short] [--lang XX]`
+### `/immo:report [--short] [--pdf] [--lang XX]`
 
 Generate advisor briefing document.
 
@@ -231,12 +232,18 @@ Generate advisor briefing document.
 - 5 questions for your advisor
 - Creates: `.immo/output/SUMMARY-[date].md`
 
+**PDF Output (`--pdf`):**
+- Converts report to PDF for sharing with advisors
+- Requires: pandoc, md-to-pdf, or mdpdf installed
+- Creates: `.immo/output/BRIEFING-[date].pdf`
+
 **Languages:** `en` (default), `pt` (Portuguese), `de` (German)
 
 **Examples:**
-- `/immo:report` — Full briefing
-- `/immo:report --short` — 1-page summary
-- `/immo:report --short --lang pt` — Short summary in Portuguese
+- `/immo:report` — Full briefing (Markdown)
+- `/immo:report --pdf` — Full briefing as PDF
+- `/immo:report --short --pdf` — 1-page PDF summary
+- `/immo:report --short --pdf --lang pt` — Portuguese PDF summary
 
 ---
 

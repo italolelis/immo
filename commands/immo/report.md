@@ -20,10 +20,12 @@ Generate a comprehensive financial advisor briefing document:
 **Creates:** `.immo/output/BRIEFING-[DATE].md`
 
 **Usage:**
-- `/immo:report` — Full advisor briefing
+- `/immo:report` — Full advisor briefing (Markdown)
 - `/immo:report --short` — 1-page executive summary
+- `/immo:report --pdf` — Generate PDF report
+- `/immo:report --short --pdf` — 1-page PDF summary
 - `/immo:report --lang pt` — Generate in Portuguese
-- `/immo:report --short --lang de` — Short report in German
+- `/immo:report --short --pdf --lang de` — Short PDF in German
 
 </objective>
 
@@ -308,22 +310,111 @@ If file exists, append counter: `BRIEFING-[DATE]-2.md`
 **Write to:**
 `.immo/output/BRIEFING-[DATE].md`
 
-## Phase 8: Update STATE.md
+## Phase 8: PDF Generation (if --pdf specified)
+
+**If `--pdf` flag is present:**
+
+### Step 1: Check for PDF converter
+
+Try converters in order of preference:
+
+```bash
+# Check for pandoc (best quality)
+command -v pandoc >/dev/null 2>&1 && echo "PANDOC"
+
+# Check for mdpdf
+command -v mdpdf >/dev/null 2>&1 && echo "MDPDF"
+
+# Check for md-to-pdf via npx
+npx --yes md-to-pdf --version >/dev/null 2>&1 && echo "MD_TO_PDF"
+```
+
+### Step 2: Convert to PDF
+
+**Using pandoc (preferred):**
+```bash
+pandoc "[MARKDOWN_FILE]" \
+  -o "[PDF_FILE]" \
+  --pdf-engine=xelatex \
+  -V geometry:margin=2.5cm \
+  -V fontsize=11pt \
+  -V colorlinks=true \
+  -V linkcolor=blue \
+  --toc \
+  --toc-depth=2
+```
+
+**If xelatex not available, try with default engine:**
+```bash
+pandoc "[MARKDOWN_FILE]" \
+  -o "[PDF_FILE]" \
+  -V geometry:margin=2.5cm \
+  -V fontsize=11pt
+```
+
+**Using md-to-pdf (fallback):**
+```bash
+npx --yes md-to-pdf "[MARKDOWN_FILE]"
+```
+
+**Using mdpdf (alternative):**
+```bash
+mdpdf "[MARKDOWN_FILE]" "[PDF_FILE]"
+```
+
+### Step 3: Verify PDF created
+
+```bash
+[ -f "[PDF_FILE]" ] && echo "PDF created successfully"
+```
+
+### PDF Filenames
+
+- Full report: `.immo/output/BRIEFING-[DATE].pdf`
+- Short report: `.immo/output/SUMMARY-[DATE].pdf`
+
+### If no converter available
+
+Display:
+```
+⚠️ PDF generation requires a converter. Install one of:
+
+Option 1 - Pandoc (recommended):
+  brew install pandoc          # macOS
+  apt install pandoc           # Ubuntu/Debian
+
+  For best results, also install LaTeX:
+  brew install --cask mactex   # macOS
+  apt install texlive-xetex    # Ubuntu/Debian
+
+Option 2 - md-to-pdf (Node.js):
+  npm install -g md-to-pdf
+
+Option 3 - mdpdf (Node.js):
+  npm install -g mdpdf
+
+Markdown report saved: [MARKDOWN_FILE]
+Convert manually or install a converter and run again.
+```
+
+## Phase 9: Update STATE.md
 
 ```markdown
 ### Phase: REPORTED
 ### Last Action: Generated advisor briefing
 ### Report: .immo/output/BRIEFING-[DATE].md
+### PDF: .immo/output/BRIEFING-[DATE].pdf (if generated)
 ```
 
-## Phase 9: Output Summary
+## Phase 10: Output Summary
 
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
  IMMO ► REPORT GENERATED
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-📝 Generated: .immo/output/BRIEFING-[DATE].md
+📝 Markdown: .immo/output/BRIEFING-[DATE].md
+📄 PDF:      .immo/output/BRIEFING-[DATE].pdf  (if --pdf)
 🌐 Language: [LANGUAGE]
 
 Contents:
